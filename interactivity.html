@@ -23,7 +23,7 @@
       <li><a href="http://leafletjs.com/examples/geojson/">Using GeoJSON with Leaflet (not shown in this demo)</a>
     </ul>
     <script>
-      var HOST = 'https://klokantech.tilehosting.com', KEY = 'tX3rTEfwFsgz3vdAfhPl';
+      var HOST = 'http://maps.siemens.com';
 
       // -----------------------------------------------------------------------
       // prepare the data
@@ -44,7 +44,7 @@
       if (mapboxgl.supported()) {
         var map_vector = new mapboxgl.Map({
           container: 'map_vector',
-          style: HOST + '/styles/streets.json?key=' + KEY
+          style: HOST + '/styles/osm-bright.json'
         });
         map_vector.addControl(new mapboxgl.NavigationControl());
         map_vector.fitBounds(europe);

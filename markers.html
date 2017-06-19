@@ -79,7 +79,7 @@
       <li><a href="https://github.com/Leaflet/Leaflet.markercluster#examples">Leaflet marker clustering example and documentation</a>
     </ul>
     <script>
-      var HOST = 'https://klokantech.tilehosting.com', KEY = 'tX3rTEfwFsgz3vdAfhPl';
+      var HOST = 'http://maps.siemens.com';
 
       // -----------------------------------------------------------------------
       // prepare the data
@@ -105,7 +105,7 @@
       if (mapboxgl.supported()) {
         var map_vector = new mapboxgl.Map({
           container: 'map_vector',
-          style: HOST + '/styles/streets.json?key=' + KEY
+          style: HOST + '/styles/osm-bright.json'
         });
         map_vector.addControl(new mapboxgl.NavigationControl());
 
@@ -269,7 +269,7 @@
 
       // -----------------------------------------------------------------------
       // raster version
-      fetch(HOST + '/styles/streets/rendered.json?key=' + KEY).then(function(response) {
+      fetch(HOST + '/styles/osm-bright/rendered.json').then(function(response) {
         return response.text();
       }).then(function(data) {
         data = JSON.parse(data);
