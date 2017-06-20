@@ -1,46 +1,41 @@
-<html>
-  <head>
-    <link rel="stylesheet" type="text/css" href="https://api.mapbox.com/mapbox-gl-js/v0.37.0/mapbox-gl.css" />
-    <script src="https://api.mapbox.com/mapbox-gl-js/v0.37.0/mapbox-gl.js"></script>
+---
+layout: default
+---
 
-    <link rel="stylesheet" type="text/css" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+<link rel="stylesheet" type="text/css" href="https://api.mapbox.com/mapbox-gl-js/v0.37.0/mapbox-gl.css" />
+<script src="https://api.mapbox.com/mapbox-gl-js/v0.37.0/mapbox-gl.js"></script>
+<style>
+  html,body {font-family:sans-serif;}
+  #map {width:100%; height:600px; margin: 20px 0;}
+</style>
 
-    <style>
-      html,body {font-family:sans-serif;}
-      #map {width:100%; height:600px;}
-    </style>
-  </head>
-  <body>
-    <h1>Autodetection of vector/raster browser support</h1>
-    <p>Most modern web browsers support WebGL and are therefore capable of hardware-accelerated rndering of many vector features. <em>Mapbox GL JS</em> library uses this technology to display vector maps in the web browsers.</p>
-    <p>However, this library does not provide any fallback in case the WebGL is not available. If you need your map to be available everywhere, you need to handle the fallback yourself.</p>
-    <p>This demo automatically detects if Mapbox GL JS is supported and if not, it uses Leaflet library to display fallback raster tiles.</p>
-    <p>Although the libraries are similar, they provide slightly different functions and syntax, so some parts of the code need to be written twice.</p>
-    <div id='map'></div>
-    <script>
-      var HOST = 'https://maps.siemens.com';
-      if (mapboxgl.supported()) {
-        var map = new mapboxgl.Map({
-          container: 'map',
-          style: HOST + '/styles/osm-bright.json'
-        });
-        map.addControl(new mapboxgl.NavigationControl());
-      } else {
-        fetch(HOST + '/styles/osm-bright/rendered.json').then(function(response) {
-          return response.text();
-        }).then(function(data) {
-          data = JSON.parse(data);
-          var map = L.map('map');
-          L.tileLayer(data.tiles[0]).addTo(map);
-        });
-      }
-    </script>
-    <h3>Relevant links</h3>
-    <ul>
-      <li><a href="https://www.mapbox.com/mapbox-gl-js/example/custom-style-id/">Display a map (MB GL JS)</a>
-      <li><a href="http://leafletjs.com/examples.html">Leaflet tutorials</a>
-      <li><a href="https://www.mapbox.com/mapbox-gl-js/api/#supported">https://www.mapbox.com/mapbox-gl-js/api/#supported</a>
-    </ul>
-  </body>
-</html>
+<h2>Autodetection of vector/raster browser support</h2>
+<p>Most modern web browsers support WebGL and are therefore capable of hardware-accelerated rndering of many vector features. <em>Mapbox GL JS</em> library uses this technology to display vector maps in the web browsers.</p>
+<p>However, this library does not provide any fallback in case the WebGL is not available. If you need your map to be available everywhere, you need to handle the fallback yourself.</p>
+<p>This demo automatically detects if Mapbox GL JS is supported and if not, it uses Leaflet library to display fallback raster tiles.</p>
+<p>Although the libraries are similar, they provide slightly different functions and syntax, so some parts of the code need to be written twice.</p>
+<div id='map'></div>
+<script>
+  var HOST = 'https://maps.siemens.com';
+  if (mapboxgl.supported()) {
+    var map = new mapboxgl.Map({
+      container: 'map',
+      style: HOST + '/styles/osm-bright.json'
+    });
+    map.addControl(new mapboxgl.NavigationControl());
+  } else {
+    fetch(HOST + '/styles/osm-bright/rendered.json').then(function(response) {
+      return response.text();
+    }).then(function(data) {
+      data = JSON.parse(data);
+      var map = L.map('map');
+      L.tileLayer(data.tiles[0]).addTo(map);
+    });
+  }
+</script>
+<h3>Relevant links</h3>
+<ul>
+  <li><a href="https://www.mapbox.com/mapbox-gl-js/example/custom-style-id/">Display a map (MB GL JS)</a>
+  <li><a href="http://leafletjs.com/examples.html">Leaflet tutorials</a>
+  <li><a href="https://www.mapbox.com/mapbox-gl-js/api/#supported">https://www.mapbox.com/mapbox-gl-js/api/#supported</a>
+</ul>

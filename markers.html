@@ -1,324 +1,324 @@
-<html>
-  <head>
-    <link rel="stylesheet" type="text/css" href="https://api.mapbox.com/mapbox-gl-js/v0.37.0/mapbox-gl.css" />
-    <script src="https://api.mapbox.com/mapbox-gl-js/v0.37.0/mapbox-gl.js"></script>
+---
+layout: default
+---
 
-    <link rel="stylesheet" type="text/css" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+<link rel="stylesheet" type="text/css" href="https://api.mapbox.com/mapbox-gl-js/v0.37.0/mapbox-gl.css" />
+<script src="https://api.mapbox.com/mapbox-gl-js/v0.37.0/mapbox-gl.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.0.5/MarkerCluster.css" />
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.0.5/MarkerCluster.Default.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.0.5/leaflet.markercluster.js"></script>
+<link rel="stylesheet" type="text/css" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
 
-    <style>
-      html,body {font-family:sans-serif;}
-      #map_vector, #map_raster {width:50%; height:600px;float:left;}
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.0.5/MarkerCluster.css" />
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.0.5/MarkerCluster.Default.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.0.5/leaflet.markercluster.js"></script>
 
-      .iconA {
-        width: 10px;
-        height: 10px;
-        border:1px solid #000;
-        border-radius: 50%;
-        background: #1C86EE;
-      }
-      .iconB {
-        width: 10px;
-        height: 10px;
-        border:1px solid #000;
-        border-radius: 50%;
-        background: #f00;
-      }
+<style>
+  html,body {font-family:sans-serif;}
+  #map_vector, #map_raster {width:50%; height:600px;float:left; margin: 20px 0;}
 
-      .clusterA-small, .clusterA-medium, .clusterA-large,
-      .clusterB-small, .clusterB-medium, .clusterB-large {
-        text-align: center;
-        font-size: 12px;
-        font-weight: bold;
-        border-radius: 50%;
-        background-color: #f00;
-      }
-      .clusterA-small {
-        line-height: 40px;
-        background-color: #32CD32;
-      }
-      .clusterA-medium {
-        line-height: 60px;
-        background-color: #FFD700;
-      }
-      .clusterA-large {
-        line-height: 80px;
-        background-color: #EE5C42;
-      }
-      .clusterB-small {
-        line-height: 40px;
-      }
-      .clusterB-medium {
-        line-height: 60px;
-      }
-      .clusterB-large {
-        line-height: 80px;
-      }
-    </style>
-  </head>
-  <body>
-    <h1>Markers</h1>
-    <p>The javascript in the browser is always responsible for loading the markers and inserting them into the mapping library.</p>
-    <p>In this example, the markers are generated randomly over europe with two different styles (blue and red).</p>
-    <p>Generally, the markers can be loaded from any source (static or dynamic) by the javascript and added to the map.</p>
-    <p>In case of Mapbox GL JS, the points are styled based on the Style specification (<a href="https://www.mapbox.com/mapbox-gl-js/style-spec/">https://www.mapbox.com/mapbox-gl-js/style-spec/</a>) or alternatively as custom HTML markers (link below), but these <a href="https://github.com/mapbox/mapbox-gl-js/issues/4491">do not support clustering</a>.</p>
-    <div id="map_vector"></div>
-    <div id="map_raster"></div>
-    <p>Most of the things has to be implemented twice (if you need to support clients without WebGL support). <em>Left: vector map (with Mapbox GL JS), Right: raster map (Leaflet)</em></p>
-    <h3>Relevant links</h3>
-    <ul>
-      <li><a href="https://www.mapbox.com/mapbox-gl-js/example/geojson-markers/">Markers from inline GeoJSON (MB GL JS)</a>
-      <li><a href="https://www.mapbox.com/mapbox-gl-js/example/cluster/">Point clustering (MB GL JS)</a>
-      <li><a href="https://www.mapbox.com/mapbox-gl-js/example/custom-marker-icons/">Custom HTML markers (MB GL JS) (not shown in this demo, does not support clustering)</a>
-      <li><a href="https://www.mapbox.com/mapbox-gl-js/example/popup-on-click/">Display a popup on click (MB GL JS)</a>
-      <li><a href="http://leafletjs.com/examples/custom-icons/">Leaflet custom markers</a>
-      <li><a href="https://github.com/Leaflet/Leaflet.markercluster#examples">Leaflet marker clustering example and documentation</a>
-    </ul>
-    <script>
-      var HOST = 'https://maps.siemens.com';
+  .iconA {
+    width: 10px;
+    height: 10px;
+    border:1px solid #000;
+    border-radius: 50%;
+    background: #1C86EE;
+  }
+  .iconB {
+    width: 10px;
+    height: 10px;
+    border:1px solid #000;
+    border-radius: 50%;
+    background: #f00;
+  }
 
-      // -----------------------------------------------------------------------
-      // prepare the data
-      var europe = [-34.49296, 29.735139, 46.75348, 71.47299];
+  .clusterA-small, .clusterA-medium, .clusterA-large,
+  .clusterB-small, .clusterB-medium, .clusterB-large {
+    text-align: center;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 50%;
+    background-color: #f00;
+  }
+  .clusterA-small {
+    line-height: 40px;
+    background-color: #32CD32;
+  }
+  .clusterA-medium {
+    line-height: 60px;
+    background-color: #FFD700;
+  }
+  .clusterA-large {
+    line-height: 80px;
+    background-color: #EE5C42;
+  }
+  .clusterB-small {
+    line-height: 40px;
+  }
+  .clusterB-medium {
+    line-height: 60px;
+  }
+  .clusterB-large {
+    line-height: 80px;
+  }
+</style>
 
-      // generate two groups of random markers withing the bounds
-      var markersA = [], markersB = [];
-      for (var i = 0; i < 100; i++) {
-        markersA.push([
-          europe[0] + (Math.random() / 2) * (europe[2] - europe[0]),
-          europe[1] + Math.random() * (europe[3] - europe[1])
-        ]);
-      }
-      for (var i = 0; i < 100; i++) {
-        markersB.push([
-          europe[0] + (0.5 + Math.random() / 2) * (europe[2] - europe[0]),
-          europe[1] + Math.random() * (europe[3] - europe[1])
-        ]);
-      }
+<h2>Markers</h2>
+<p>The javascript in the browser is always responsible for loading the markers and inserting them into the mapping library.</p>
+<p>In this example, the markers are generated randomly over europe with two different styles (blue and red).</p>
+<p>Generally, the markers can be loaded from any source (static or dynamic) by the javascript and added to the map.</p>
+<p>In case of Mapbox GL JS, the points are styled based on the Style specification (<a href="https://www.mapbox.com/mapbox-gl-js/style-spec/">https://www.mapbox.com/mapbox-gl-js/style-spec/</a>) or alternatively as custom HTML markers (link below), but these <a href="https://github.com/mapbox/mapbox-gl-js/issues/4491">do not support clustering</a>.</p>
+<div id="map_vector"></div>
+<div id="map_raster"></div>
+<p>Most of the things has to be implemented twice (if you need to support clients without WebGL support). <em>Left: vector map (with Mapbox GL JS), Right: raster map (Leaflet)</em></p>
+<h3>Relevant links</h3>
+<ul>
+  <li><a href="https://www.mapbox.com/mapbox-gl-js/example/geojson-markers/">Markers from inline GeoJSON (MB GL JS)</a>
+  <li><a href="https://www.mapbox.com/mapbox-gl-js/example/cluster/">Point clustering (MB GL JS)</a>
+  <li><a href="https://www.mapbox.com/mapbox-gl-js/example/custom-marker-icons/">Custom HTML markers (MB GL JS) (not shown in this demo, does not support clustering)</a>
+  <li><a href="https://www.mapbox.com/mapbox-gl-js/example/popup-on-click/">Display a popup on click (MB GL JS)</a>
+  <li><a href="http://leafletjs.com/examples/custom-icons/">Leaflet custom markers</a>
+  <li><a href="https://github.com/Leaflet/Leaflet.markercluster#examples">Leaflet marker clustering example and documentation</a>
+</ul>
+<script>
+  var HOST = 'https://maps.siemens.com';
 
-      // -----------------------------------------------------------------------
-      // vector version, only if supported
-      if (mapboxgl.supported()) {
-        var map_vector = new mapboxgl.Map({
-          container: 'map_vector',
-          style: HOST + '/styles/osm-bright.json'
-        });
-        map_vector.addControl(new mapboxgl.NavigationControl());
+  // -----------------------------------------------------------------------
+  // prepare the data
+  var europe = [-34.49296, 29.735139, 46.75348, 71.47299];
 
-        map_vector.on('load', function() {
-          map_vector.fitBounds(europe, {animate: false, padding: 80});
-          map_vector.addSource("markersA", {
-            type: "geojson",
-            data: {
-              type: "FeatureCollection",
-              features: markersA.map(function(marker, i) {
-                return {
-                  type: "Feature",
-                  properties: {
-                    popup: 'Marker <b>#' + i + '</b>'
-                  },
-                  geometry: {
-                    type: "Point",
-                    coordinates: marker
-                  }
-                };
-              })
-            },
-            cluster: true,
-            clusterMaxZoom: 14, // Max zoom to cluster points on
-            clusterRadius: 50 // Radius of each cluster when clustering points
-          });
+  // generate two groups of random markers withing the bounds
+  var markersA = [], markersB = [];
+  for (var i = 0; i < 100; i++) {
+    markersA.push([
+      europe[0] + (Math.random() / 2) * (europe[2] - europe[0]),
+      europe[1] + Math.random() * (europe[3] - europe[1])
+    ]);
+  }
+  for (var i = 0; i < 100; i++) {
+    markersB.push([
+      europe[0] + (0.5 + Math.random() / 2) * (europe[2] - europe[0]),
+      europe[1] + Math.random() * (europe[3] - europe[1])
+    ]);
+  }
 
-          map_vector.addLayer({
-            id: "clustersA",
-            type: "circle",
-            source: "markersA",
-            filter: ["has", "point_count"],
-            paint: {
-              "circle-color": {
-                property: "point_count",
-                type: "interval",
-                stops: [
-                  [0, "#32CD32"],
-                  [5, "#FFD700"],
-                  [20, "#EE5C42"],
-                ]
+  // -----------------------------------------------------------------------
+  // vector version, only if supported
+  if (mapboxgl.supported()) {
+    var map_vector = new mapboxgl.Map({
+      container: 'map_vector',
+      style: HOST + '/styles/osm-bright.json'
+    });
+    map_vector.addControl(new mapboxgl.NavigationControl());
+
+    map_vector.on('load', function() {
+      map_vector.fitBounds(europe, {animate: false, padding: 80});
+      map_vector.addSource("markersA", {
+        type: "geojson",
+        data: {
+          type: "FeatureCollection",
+          features: markersA.map(function(marker, i) {
+            return {
+              type: "Feature",
+              properties: {
+                popup: 'Marker <b>#' + i + '</b>'
               },
-              "circle-radius": {
-                property: "point_count",
-                type: "interval",
-                stops: [
-                  [0, 20],
-                  [5, 30],
-                  [20, 40]
-                ]
+              geometry: {
+                type: "Point",
+                coordinates: marker
               }
-            }
-          });
-
-          map_vector.addLayer({
-            id: "clusterA-count",
-            type: "symbol",
-            source: "markersA",
-            filter: ["has", "point_count"],
-            layout: {
-              "text-field": "{point_count_abbreviated}",
-              "text-font": ["Open Sans Bold"],
-              "text-size": 12
-            }
-          });
-
-          map_vector.addLayer({
-            id: "unclusteredA-point",
-            type: "circle",
-            source: "markersA",
-            filter: ["!has", "point_count"],
-            paint: {
-              "circle-color": "#1C86EE",
-              "circle-radius": 5,
-              "circle-stroke-width": 1,
-              "circle-stroke-color": "#000"
-            }
-          });
-
-          map_vector.addSource("markersB", {
-            type: "geojson",
-            data: {
-              type: "FeatureCollection",
-              features: markersB.map(function(marker) {
-                return {
-                  type: "Feature",
-                  geometry: {
-                    type: "Point",
-                    coordinates: marker
-                  }
-                };
-              })
-            },
-            cluster: true,
-            clusterMaxZoom: 14, // Max zoom to cluster points on
-            clusterRadius: 50 // Radius of each cluster when clustering points
-          });
-
-          map_vector.addLayer({
-            id: "clustersB",
-            type: "circle",
-            source: "markersB",
-            filter: ["has", "point_count"],
-            paint: {
-              "circle-color": "#f00",
-              "circle-radius": {
-                property: "point_count",
-                type: "interval",
-                stops: [
-                  [0, 20],
-                  [5, 30],
-                  [20, 40]
-                ]
-              }
-            }
-          });
-
-          map_vector.addLayer({
-            id: "clusterB-count",
-            type: "symbol",
-            source: "markersB",
-            filter: ["has", "point_count"],
-            layout: {
-              "text-field": "{point_count_abbreviated}",
-              "text-font": ["Open Sans Bold"],
-              "text-size": 12
-            }
-          });
-
-          map_vector.addLayer({
-            id: "unclusteredB-point",
-            type: "circle",
-            source: "markersB",
-            filter: ["!has", "point_count"],
-            paint: {
-              "circle-color": "#f00",
-              "circle-radius": 5,
-              "circle-stroke-width": 1,
-              "circle-stroke-color": "#000"
-            }
-          });
-
-          map_vector.on('click', 'unclusteredA-point', function(e) {
-            new mapboxgl.Popup()
-              .setLngLat(e.features[0].geometry.coordinates)
-              .setHTML(e.features[0].properties.popup)
-              .addTo(map_vector);
-          });
-
-          // Change the cursor to a pointer when the mouse is over the places layer
-          map_vector.on('mouseenter', 'unclusteredA-point', function() {
-            map_vector.getCanvas().style.cursor = 'pointer';
-          });
-
-          // Change it back to a pointer when it leaves
-          map_vector.on('mouseleave', 'unclusteredA-point', function() {
-            map_vector.getCanvas().style.cursor = '';
-          });
-        });
-      }
-
-      // -----------------------------------------------------------------------
-      // raster version
-      fetch(HOST + '/styles/osm-bright/rendered.json').then(function(response) {
-        return response.text();
-      }).then(function(data) {
-        data = JSON.parse(data);
-        var map_raster = L.map('map_raster');
-        L.tileLayer(data.tiles[0]).addTo(map_raster);
-        map_raster.fitBounds([[europe[1], europe[0]], [europe[3], europe[2]]]);
-
-        var markergroupA = L.markerClusterGroup({
-            maxClusterRadius: 50,
-            iconCreateFunction: function(cluster) {
-            var markers = cluster.getAllChildMarkers().length;
-            if (markers >= 20) {
-              return L.divIcon({html: markers, className: 'clusterA-large', iconSize: L.point(80, 80)});
-            } else if (markers >= 5) {
-              return L.divIcon({html: markers, className: 'clusterA-medium', iconSize: L.point(60, 60)});
-            } else {
-              return L.divIcon({html: markers, className: 'clusterA-small', iconSize: L.point(40, 40)});
-            }
-          },
-          spiderfyOnMaxZoom: false, showCoverageOnHover: false, zoomToBoundsOnClick: false
-        });
-        var iconA = L.divIcon({className: 'iconA'});
-        markersA.forEach(function(marker, i) {
-          var m = L.marker(new L.LatLng(marker[1], marker[0]), {icon: iconA});
-          m.bindPopup('Marker <b>#' + i + '</b>');
-          markergroupA.addLayer(m);
-        });
-        map_raster.addLayer(markergroupA);
-
-        var markergroupB = L.markerClusterGroup({
-            maxClusterRadius: 50,
-            iconCreateFunction: function(cluster) {
-            var markers = cluster.getAllChildMarkers().length;
-            if (markers >= 20) {
-              return L.divIcon({html: markers, className: 'clusterB-large', iconSize: L.point(80, 80)});
-            } else if (markers >= 5) {
-              return L.divIcon({html: markers, className: 'clusterB-medium', iconSize: L.point(60, 60)});
-            } else {
-              return L.divIcon({html: markers, className: 'clusterB-small', iconSize: L.point(40, 40)});
-            }
-          },
-          spiderfyOnMaxZoom: false, showCoverageOnHover: false, zoomToBoundsOnClick: false
-        });
-        var iconB = L.divIcon({className: 'iconB'});
-        markersB.forEach(function(marker) {
-          markergroupB.addLayer(L.marker(new L.LatLng(marker[1], marker[0]), {icon: iconB}));
-        });
-        map_raster.addLayer(markergroupB);
+            };
+          })
+        },
+        cluster: true,
+        clusterMaxZoom: 14, // Max zoom to cluster points on
+        clusterRadius: 50 // Radius of each cluster when clustering points
       });
-    </script>
-  </body>
-</html>
+
+      map_vector.addLayer({
+        id: "clustersA",
+        type: "circle",
+        source: "markersA",
+        filter: ["has", "point_count"],
+        paint: {
+          "circle-color": {
+            property: "point_count",
+            type: "interval",
+            stops: [
+              [0, "#32CD32"],
+              [5, "#FFD700"],
+              [20, "#EE5C42"],
+            ]
+          },
+          "circle-radius": {
+            property: "point_count",
+            type: "interval",
+            stops: [
+              [0, 20],
+              [5, 30],
+              [20, 40]
+            ]
+          }
+        }
+      });
+
+      map_vector.addLayer({
+        id: "clusterA-count",
+        type: "symbol",
+        source: "markersA",
+        filter: ["has", "point_count"],
+        layout: {
+          "text-field": "{point_count_abbreviated}",
+          "text-font": ["Open Sans Bold"],
+          "text-size": 12
+        }
+      });
+
+      map_vector.addLayer({
+        id: "unclusteredA-point",
+        type: "circle",
+        source: "markersA",
+        filter: ["!has", "point_count"],
+        paint: {
+          "circle-color": "#1C86EE",
+          "circle-radius": 5,
+          "circle-stroke-width": 1,
+          "circle-stroke-color": "#000"
+        }
+      });
+
+      map_vector.addSource("markersB", {
+        type: "geojson",
+        data: {
+          type: "FeatureCollection",
+          features: markersB.map(function(marker) {
+            return {
+              type: "Feature",
+              geometry: {
+                type: "Point",
+                coordinates: marker
+              }
+            };
+          })
+        },
+        cluster: true,
+        clusterMaxZoom: 14, // Max zoom to cluster points on
+        clusterRadius: 50 // Radius of each cluster when clustering points
+      });
+
+      map_vector.addLayer({
+        id: "clustersB",
+        type: "circle",
+        source: "markersB",
+        filter: ["has", "point_count"],
+        paint: {
+          "circle-color": "#f00",
+          "circle-radius": {
+            property: "point_count",
+            type: "interval",
+            stops: [
+              [0, 20],
+              [5, 30],
+              [20, 40]
+            ]
+          }
+        }
+      });
+
+      map_vector.addLayer({
+        id: "clusterB-count",
+        type: "symbol",
+        source: "markersB",
+        filter: ["has", "point_count"],
+        layout: {
+          "text-field": "{point_count_abbreviated}",
+          "text-font": ["Open Sans Bold"],
+          "text-size": 12
+        }
+      });
+
+      map_vector.addLayer({
+        id: "unclusteredB-point",
+        type: "circle",
+        source: "markersB",
+        filter: ["!has", "point_count"],
+        paint: {
+          "circle-color": "#f00",
+          "circle-radius": 5,
+          "circle-stroke-width": 1,
+          "circle-stroke-color": "#000"
+        }
+      });
+
+      map_vector.on('click', 'unclusteredA-point', function(e) {
+        new mapboxgl.Popup()
+                .setLngLat(e.features[0].geometry.coordinates)
+                .setHTML(e.features[0].properties.popup)
+                .addTo(map_vector);
+      });
+
+      // Change the cursor to a pointer when the mouse is over the places layer
+      map_vector.on('mouseenter', 'unclusteredA-point', function() {
+        map_vector.getCanvas().style.cursor = 'pointer';
+      });
+
+      // Change it back to a pointer when it leaves
+      map_vector.on('mouseleave', 'unclusteredA-point', function() {
+        map_vector.getCanvas().style.cursor = '';
+      });
+    });
+  }
+
+  // -----------------------------------------------------------------------
+  // raster version
+  fetch(HOST + '/styles/osm-bright/rendered.json').then(function(response) {
+    return response.text();
+  }).then(function(data) {
+    data = JSON.parse(data);
+    var map_raster = L.map('map_raster');
+    L.tileLayer(data.tiles[0]).addTo(map_raster);
+    map_raster.fitBounds([[europe[1], europe[0]], [europe[3], europe[2]]]);
+
+    var markergroupA = L.markerClusterGroup({
+      maxClusterRadius: 50,
+      iconCreateFunction: function(cluster) {
+        var markers = cluster.getAllChildMarkers().length;
+        if (markers >= 20) {
+          return L.divIcon({html: markers, className: 'clusterA-large', iconSize: L.point(80, 80)});
+        } else if (markers >= 5) {
+          return L.divIcon({html: markers, className: 'clusterA-medium', iconSize: L.point(60, 60)});
+        } else {
+          return L.divIcon({html: markers, className: 'clusterA-small', iconSize: L.point(40, 40)});
+        }
+      },
+      spiderfyOnMaxZoom: false, showCoverageOnHover: false, zoomToBoundsOnClick: false
+    });
+    var iconA = L.divIcon({className: 'iconA'});
+    markersA.forEach(function(marker, i) {
+      var m = L.marker(new L.LatLng(marker[1], marker[0]), {icon: iconA});
+      m.bindPopup('Marker <b>#' + i + '</b>');
+      markergroupA.addLayer(m);
+    });
+    map_raster.addLayer(markergroupA);
+
+    var markergroupB = L.markerClusterGroup({
+      maxClusterRadius: 50,
+      iconCreateFunction: function(cluster) {
+        var markers = cluster.getAllChildMarkers().length;
+        if (markers >= 20) {
+          return L.divIcon({html: markers, className: 'clusterB-large', iconSize: L.point(80, 80)});
+        } else if (markers >= 5) {
+          return L.divIcon({html: markers, className: 'clusterB-medium', iconSize: L.point(60, 60)});
+        } else {
+          return L.divIcon({html: markers, className: 'clusterB-small', iconSize: L.point(40, 40)});
+        }
+      },
+      spiderfyOnMaxZoom: false, showCoverageOnHover: false, zoomToBoundsOnClick: false
+    });
+    var iconB = L.divIcon({className: 'iconB'});
+    markersB.forEach(function(marker) {
+      markergroupB.addLayer(L.marker(new L.LatLng(marker[1], marker[0]), {icon: iconB}));
+    });
+    map_raster.addLayer(markergroupB);
+  });
+</script>
+

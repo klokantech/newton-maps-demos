@@ -1,230 +1,229 @@
-<html>
-  <head>
-    <link rel="stylesheet" type="text/css" href="https://api.mapbox.com/mapbox-gl-js/v0.37.0/mapbox-gl.css" />
-    <script src="https://api.mapbox.com/mapbox-gl-js/v0.37.0/mapbox-gl.js"></script>
+---
+layout: default
+---
 
-    <style>
-      html,body {font-family:sans-serif;}
-      #map_vector, #map_raster {width:100%; height:600px;}
-    </style>
-  </head>
-  <body>
-    <h1>Advanced interactivity</h1>
-    <p>This examples show advanced interactivity with markers (dynamic filtering based on text input) and GeoJSON polygons + interactivity (including bounds fitting).</p>
-    <p>The GeoJSON is not part of the map server (it's an additional layer over the map itself) so it needs to be loaded from some other server (or as a static file).</p>
-    <div id="map_vector"></div>
-    <div style="padding:15px 0 0 15px;">
-      Filter markers (fulltext) by numerical id (<em>long random numbers</em>): <input id="marker-filter" />
-    </div>
-    <h3>Relevant links</h3>
-    <ul>
-      <li><a href="https://www.mapbox.com/help/building-a-store-locator/">Build a store locator using Mapbox GL JS tutorial</a>
-      <li><a href="https://www.mapbox.com/mapbox-gl-js/example/polygon-popup-on-click/">GeoJSON polygons + interactivity (MB GL JS)</a>
-      <li><a href="http://leafletjs.com/examples/geojson/">Using GeoJSON with Leaflet (not shown in this demo)</a>
-    </ul>
-    <script>
-      var HOST = 'https://maps.siemens.com';
+<link rel="stylesheet" type="text/css" href="https://api.mapbox.com/mapbox-gl-js/v0.37.0/mapbox-gl.css" />
+<script src="https://api.mapbox.com/mapbox-gl-js/v0.37.0/mapbox-gl.js"></script>
 
-      // -----------------------------------------------------------------------
-      // prepare the data
-      var europe = [-34.49296, 29.735139, 46.75348, 71.47299];
+<style>
+  html,body {font-family:sans-serif;}
+  #map_vector, #map_raster {width:100%; height:600px; margin: 20px 0;}
+</style>
 
-      // generate two groups of random markers withing the bounds
-      var markersA = [], markersB = [];
-      for (var i = 0; i < 200; i++) {
-        markersA.push({
-          coords: [
-            europe[0] + Math.random() * (europe[2] - europe[0]),
-            europe[1] + Math.random() * (europe[3] - europe[1])
-          ],
-          id: Math.floor(Math.random() * 1e6).toString() // "ID"
-        });
-      }
+<h2>Advanced interactivity</h2>
+<p>This examples show advanced interactivity with markers (dynamic filtering based on text input) and GeoJSON polygons + interactivity (including bounds fitting).</p>
+<p>The GeoJSON is not part of the map server (it's an additional layer over the map itself) so it needs to be loaded from some other server (or as a static file).</p>
+<div id="map_vector"></div>
+<div style="padding:15px 0 0 15px;">
+  Filter markers (fulltext) by numerical id (<em>long random numbers</em>): <input id="marker-filter" />
+</div>
+<h3>Relevant links</h3>
+<ul>
+  <li><a href="https://www.mapbox.com/help/building-a-store-locator/">Build a store locator using Mapbox GL JS tutorial</a>
+  <li><a href="https://www.mapbox.com/mapbox-gl-js/example/polygon-popup-on-click/">GeoJSON polygons + interactivity (MB GL JS)</a>
+  <li><a href="http://leafletjs.com/examples/geojson/">Using GeoJSON with Leaflet (not shown in this demo)</a>
+</ul>
+<script>
+  var HOST = 'https://maps.siemens.com';
 
-      if (mapboxgl.supported()) {
-        var map_vector = new mapboxgl.Map({
-          container: 'map_vector',
-          style: HOST + '/styles/osm-bright.json'
-        });
-        map_vector.addControl(new mapboxgl.NavigationControl());
-        map_vector.fitBounds(europe);
+  // -----------------------------------------------------------------------
+  // prepare the data
+  var europe = [-34.49296, 29.735139, 46.75348, 71.47299];
 
-        map_vector.on('load', function() {
-          // countries interactivity
-          map_vector.addSource("countries", {
-            type: "geojson",
-            data: "https://openlayers.org/en/v4.1.1/examples/data/geojson/countries.geojson"
-          });
+  // generate two groups of random markers withing the bounds
+  var markersA = [], markersB = [];
+  for (var i = 0; i < 200; i++) {
+    markersA.push({
+      coords: [
+        europe[0] + Math.random() * (europe[2] - europe[0]),
+        europe[1] + Math.random() * (europe[3] - europe[1])
+      ],
+      id: Math.floor(Math.random() * 1e6).toString() // "ID"
+    });
+  }
 
-          map_vector.addLayer({
-            id: "countries-fill",
-            type: "fill",
-            source: "countries",
-            paint: {
-              "fill-color": "#000",
-              "fill-opacity": 0.1
-            }
-          });
+  if (mapboxgl.supported()) {
+    var map_vector = new mapboxgl.Map({
+      container: 'map_vector',
+      style: HOST + '/styles/osm-bright.json'
+    });
+    map_vector.addControl(new mapboxgl.NavigationControl());
+    map_vector.fitBounds(europe);
 
-          map_vector.addLayer({
-            id: "countries-line",
-            type: "line",
-            source: "countries",
-            paint: {
-              "line-color": "#000",
-              "line-width": 1
-            }
-          });
+    map_vector.on('load', function() {
+      // countries interactivity
+      map_vector.addSource("countries", {
+        type: "geojson",
+        data: "https://openlayers.org/en/v4.1.1/examples/data/geojson/countries.geojson"
+      });
 
-          map_vector.addLayer({
-            id: "countries-highlight",
-            type: "line",
-            source: "countries",
-            filter: ['==', 'name', ''],
-            paint: {
-              "line-color": "#c00",
-              "line-width": 4
-            }
-          });
+      map_vector.addLayer({
+        id: "countries-fill",
+        type: "fill",
+        source: "countries",
+        paint: {
+          "fill-color": "#000",
+          "fill-opacity": 0.1
+        }
+      });
 
-          map_vector.on('mousemove', 'countries-fill', function(e) {
-            //map_vector.getCanvas().style.cursor = 'pointer';
-            map_vector.setFilter('countries-highlight', ['==', 'name', e.features[0].properties.name]);
-          });
+      map_vector.addLayer({
+        id: "countries-line",
+        type: "line",
+        source: "countries",
+        paint: {
+          "line-color": "#000",
+          "line-width": 1
+        }
+      });
 
-          map_vector.on('mouseout', 'countries-fill', function(e) {
-            //map_vector.getCanvas().style.cursor = '';
-            map_vector.setFilter('countries-highlight', ['==', 'name', '']);
-          });
+      map_vector.addLayer({
+        id: "countries-highlight",
+        type: "line",
+        source: "countries",
+        filter: ['==', 'name', ''],
+        paint: {
+          "line-color": "#c00",
+          "line-width": 4
+        }
+      });
 
-          map_vector.on('click', 'countries-fill', function(e) {
-            alert(e.features[0].properties.name);
-          });
+      map_vector.on('mousemove', 'countries-fill', function(e) {
+        //map_vector.getCanvas().style.cursor = 'pointer';
+        map_vector.setFilter('countries-highlight', ['==', 'name', e.features[0].properties.name]);
+      });
 
-          // markers interactivity
-          map_vector.addSource("markersA", {
-            type: "geojson",
-            data: {
-              type: "FeatureCollection",
-              features: []
-            },
-            cluster: true,
-            clusterMaxZoom: 14, // Max zoom to cluster points on
-            clusterRadius: 50 // Radius of each cluster when clustering points
-          });
+      map_vector.on('mouseout', 'countries-fill', function(e) {
+        //map_vector.getCanvas().style.cursor = '';
+        map_vector.setFilter('countries-highlight', ['==', 'name', '']);
+      });
 
-          map_vector.addLayer({
-            id: "clustersA",
-            type: "circle",
-            source: "markersA",
-            filter: ["has", "point_count"],
-            paint: {
-              "circle-color": {
-                property: "point_count",
-                type: "interval",
-                stops: [
-                  [0, "#32CD32"],
-                  [5, "#FFD700"],
-                  [20, "#EE5C42"],
-                ]
+      map_vector.on('click', 'countries-fill', function(e) {
+        alert(e.features[0].properties.name);
+      });
+
+      // markers interactivity
+      map_vector.addSource("markersA", {
+        type: "geojson",
+        data: {
+          type: "FeatureCollection",
+          features: []
+        },
+        cluster: true,
+        clusterMaxZoom: 14, // Max zoom to cluster points on
+        clusterRadius: 50 // Radius of each cluster when clustering points
+      });
+
+      map_vector.addLayer({
+        id: "clustersA",
+        type: "circle",
+        source: "markersA",
+        filter: ["has", "point_count"],
+        paint: {
+          "circle-color": {
+            property: "point_count",
+            type: "interval",
+            stops: [
+              [0, "#32CD32"],
+              [5, "#FFD700"],
+              [20, "#EE5C42"],
+            ]
+          },
+          "circle-radius": {
+            property: "point_count",
+            type: "interval",
+            stops: [
+              [0, 20],
+              [5, 30],
+              [20, 40]
+            ]
+          }
+        }
+      });
+
+      map_vector.addLayer({
+        id: "clusterA-count",
+        type: "symbol",
+        source: "markersA",
+        filter: ["has", "point_count"],
+        layout: {
+          "text-field": "{point_count_abbreviated}",
+          "text-font": ["Open Sans Bold"],
+          "text-size": 12
+        }
+      });
+
+      map_vector.addLayer({
+        id: "unclusteredA-point",
+        type: "circle",
+        source: "markersA",
+        filter: ["!has", "point_count"],
+        paint: {
+          "circle-color": "#1C86EE",
+          "circle-radius": 5,
+          "circle-stroke-width": 1,
+          "circle-stroke-color": "#000"
+        }
+      });
+
+      map_vector.on('click', 'unclusteredA-point', function(e) {
+        new mapboxgl.Popup()
+                .setLngLat(e.features[0].geometry.coordinates)
+                .setHTML(e.features[0].properties.popup)
+                .addTo(map_vector);
+      });
+
+      // Change the cursor to a pointer when the mouse is over the places layer
+      map_vector.on('mouseenter', 'unclusteredA-point', function() {
+        map_vector.getCanvas().style.cursor = 'pointer';
+      });
+
+      // Change it back to a pointer when it leaves
+      map_vector.on('mouseleave', 'unclusteredA-point', function() {
+        map_vector.getCanvas().style.cursor = '';
+      });
+
+      var updateData = function(filter) {
+        var bounds = [Infinity, Infinity, -Infinity, -Infinity];
+        var features = [];
+        markersA.forEach(function(marker) {
+          if (marker.id.indexOf(filter) > -1) {
+            features.push({
+              type: "Feature",
+              properties: {
+                id: marker.id,
+                popup: 'Marker <b>#' + marker.id + '</b>'
               },
-              "circle-radius": {
-                property: "point_count",
-                type: "interval",
-                stops: [
-                  [0, 20],
-                  [5, 30],
-                  [20, 40]
-                ]
-              }
-            }
-          });
-
-          map_vector.addLayer({
-            id: "clusterA-count",
-            type: "symbol",
-            source: "markersA",
-            filter: ["has", "point_count"],
-            layout: {
-              "text-field": "{point_count_abbreviated}",
-              "text-font": ["Open Sans Bold"],
-              "text-size": 12
-            }
-          });
-
-          map_vector.addLayer({
-            id: "unclusteredA-point",
-            type: "circle",
-            source: "markersA",
-            filter: ["!has", "point_count"],
-            paint: {
-              "circle-color": "#1C86EE",
-              "circle-radius": 5,
-              "circle-stroke-width": 1,
-              "circle-stroke-color": "#000"
-            }
-          });
-
-          map_vector.on('click', 'unclusteredA-point', function(e) {
-            new mapboxgl.Popup()
-              .setLngLat(e.features[0].geometry.coordinates)
-              .setHTML(e.features[0].properties.popup)
-              .addTo(map_vector);
-          });
-
-          // Change the cursor to a pointer when the mouse is over the places layer
-          map_vector.on('mouseenter', 'unclusteredA-point', function() {
-            map_vector.getCanvas().style.cursor = 'pointer';
-          });
-
-          // Change it back to a pointer when it leaves
-          map_vector.on('mouseleave', 'unclusteredA-point', function() {
-            map_vector.getCanvas().style.cursor = '';
-          });
-
-          var updateData = function(filter) {
-            var bounds = [Infinity, Infinity, -Infinity, -Infinity];
-            var features = [];
-            markersA.forEach(function(marker) {
-              if (marker.id.indexOf(filter) > -1) {
-                features.push({
-                  type: "Feature",
-                  properties: {
-                    id: marker.id,
-                    popup: 'Marker <b>#' + marker.id + '</b>'
-                  },
-                  geometry: {
-                    type: "Point",
-                    coordinates: marker.coords
-                  }
-                });
-                bounds[0] = Math.min(bounds[0], marker.coords[0]);
-                bounds[1] = Math.min(bounds[1], marker.coords[1]);
-                bounds[2] = Math.max(bounds[2], marker.coords[0]);
-                bounds[3] = Math.max(bounds[3], marker.coords[1]);
+              geometry: {
+                type: "Point",
+                coordinates: marker.coords
               }
             });
-            if (features.length > 0) {
-              map_vector.fitBounds(bounds, {
-                maxZoom: 16,
-                linear: true,
-                padding: 50 // 50 pixel padding
-              });
-            }
-            map_vector.getSource("markersA").setData({
-              type: "FeatureCollection",
-              features: features
-            });
-          };
-
-          document.getElementById('marker-filter').addEventListener('keyup', function(e) {
-            var value = e.target.value.trim().toLowerCase();
-            updateData(value);
-          });
-
-          updateData('');
+            bounds[0] = Math.min(bounds[0], marker.coords[0]);
+            bounds[1] = Math.min(bounds[1], marker.coords[1]);
+            bounds[2] = Math.max(bounds[2], marker.coords[0]);
+            bounds[3] = Math.max(bounds[3], marker.coords[1]);
+          }
         });
-      }
-    </script>
-  </body>
-</html>
+        if (features.length > 0) {
+          map_vector.fitBounds(bounds, {
+            maxZoom: 16,
+            linear: true,
+            padding: 50 // 50 pixel padding
+          });
+        }
+        map_vector.getSource("markersA").setData({
+          type: "FeatureCollection",
+          features: features
+        });
+      };
+
+      document.getElementById('marker-filter').addEventListener('keyup', function(e) {
+        var value = e.target.value.trim().toLowerCase();
+        updateData(value);
+      });
+
+      updateData('');
+    });
+  }
+</script>
